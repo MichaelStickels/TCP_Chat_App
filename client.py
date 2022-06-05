@@ -30,7 +30,7 @@ def connection_init():
 
     print("Type 'disconnect' to exit chatroom")
     
-    return(username)
+    return(username, s)
 
 
 #____________________________________________________________________________________________________________________________________________________________________
@@ -40,8 +40,14 @@ def connection_init():
 def message_handling():
     while True:
         
-        print('message_thread')
-        time.sleep(10)
+        # Receive messages from the server
+        # Messages are expected to be in the following format:
+        # [username]|[message]
+        data = sock.recv(4096).decode(FORMAT)
+
+        user, message = data.split('|')
+
+        print(user, ": ", message, sep='')
     
 
 
@@ -66,7 +72,7 @@ def input_handling():
 # Run
 
 # Initialize connection and take user input
-username = connection_init()
+username, sock = connection_init()
 
 # Start a thread for incoming messages
 message_thread = threading.Thread(target=message_handling)
