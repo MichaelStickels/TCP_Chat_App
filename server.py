@@ -6,39 +6,49 @@ import threading
 from socket import *
 
 FORMAT = 'utf-8'
-#____________________________________________________________________________________________________________________________________________________________________
+
+#___________________________________________________________________________________________________________________________
 #This fucntion will be used to broadcast a client's message to everyone. 
 #It works by taking in the user message and sending the message to one at 
 #a time to every client in the room
 def broadcast(user_message):
     
     for client in client_list:
-        client.send(message)
+        client.send(user_message.encode())
         
-#____________________________________________________________________________________________________________________________________________________________________
+#___________________________________________________________________________________________________________________________
 #This function will receive and handle the messages that every client sends.
 #It will broadcast the messages to every client
 #Since this function will broadcast the messages continously, we want it 
 #to run infinitely 
-def client_handling(client_socket, client_address):
-    status = True
-    while(status == True):
-        message = client_socket.recv(2000)
-        new_message = 
-        broadcast(message)
+#The function takes in the client socket so that it can receive messages from
+#that client.
+#The fucntion tales in the client address so that it can send print out the 
+#client's address in the chatroom
+
+def client_handling(client_socket, username):
+   
+    while True:
         
-#____________________________________________________________________________________________________________________________________________________________________
+        try:
+            message = client_socket.recv(4096).decode(FORMAT)
+            new_message = username + "|" + message
+            broadcast(new_message)
+        except: #If there is an error, then we should close and remove the socket
+            client_list.remove(client_list.index(client))
+            client_socket.close()
+            
+#___________________________________________________________________________________________________________________________
+
 #This function will create a socket for clients to bind to. Clients will pass in their IP address and port number
 #and the fucntion will create a socket 
 def server_init(IP, port):
     
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Creating a socket
-
     server.bind((IP, port)) #Binding the socket to the IP and Port number
-
     server.listen() #Set server to listening mode to receive data from the client 
+#___________________________________________________________________________________________________________________________
 
-#____________________________________________________________________________________________________________________________________________________________________
 if (len(sys.argv) < 2):
     print("Enter IP Address:" + sys.argv[0] + " and relay port:")
     sys.exit(1)
@@ -49,3 +59,23 @@ IP = str(sys.argv[0])
 server_init(IP,port)
 
 client_list=[];
+username_list[];
+while True: #This loop will continuously run as long as the client is connected 
+        client_socket, address = server.accept() #accepts all connections and returns the client socket and address
+        print(f"Connected with {str(address)}")
+        client_list.append(client_socket)
+        username = client_socket.recv(4096).decode(FORMAT) #receives the next input as the username 
+        username_list.append(username)
+        
+        broadcast(f"{str(username)} has joined the chat!".encode(FORMAT)) #Broadcasts a message telling everyone 
+                                                                          #who just connected to the server
+        
+        thread = threading.Thread(target=client_handle, args=(client_socket,address)) #starts the threading 
+        thread.start()
+
+
+        if (client_socket.recv(4096).decode(FORMAT) == 'disconnect'):
+            break
+            
+client_socket.close()
+server.close()
