@@ -26,7 +26,7 @@ def broadcast(user_message):
 #The fucntion tales in the client address so that it can send print out the 
 #client's address in the chatroom
 
-def client_handling(client_socket, username):
+def client_handling(client_socket):
    
     while True:
         
@@ -69,7 +69,7 @@ while True: #This loop will continuously run as long as the client is connected
         broadcast(f"{str(client)} has joined the chat!") #Broadcasts a message telling everyone 
                                                          #who just connected to the server
         
-        thread = threading.Thread(target=client_handle, args=(client_socket,address)) #starts the threading 
+        thread = threading.Thread(target=client_handle, args=(client_socket,)) #starts the threading 
         thread.start()
 
 
