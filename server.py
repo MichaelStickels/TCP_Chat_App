@@ -14,7 +14,7 @@ FORMAT = 'utf-8'
 def broadcast(user_message):
     
     for client in client_list:
-        client.send(user_message.encode())
+        client.send(user_message.encode(FORMAT))
         
 #___________________________________________________________________________________________________________________________
 #This function will receive and handle the messages that every client sends.
@@ -32,7 +32,7 @@ def client_handling(client_socket, username):
         
         try:
             message = client_socket.recv(4096).decode(FORMAT)
-            new_message = username + "|" + message
+        
             broadcast(new_message)
         except: #If there is an error, then we should close and remove the socket
             client_list.remove(client_list.index(client))
@@ -59,16 +59,15 @@ IP = str(sys.argv[0])
 server_init(IP,port)
 
 client_list=[];
-username_list[];
+
 while True: #This loop will continuously run as long as the client is connected 
         client_socket, address = server.accept() #accepts all connections and returns the client socket and address
         print(f"Connected with {str(address)}")
         client_list.append(client_socket)
-        username = client_socket.recv(4096).decode(FORMAT) #receives the next input as the username 
-        username_list.append(username)
         
-        broadcast(f"{str(username)} has joined the chat!".encode(FORMAT)) #Broadcasts a message telling everyone 
-                                                                          #who just connected to the server
+        
+        broadcast(f"{str(client)} has joined the chat!") #Broadcasts a message telling everyone 
+                                                         #who just connected to the server
         
         thread = threading.Thread(target=client_handle, args=(client_socket,address)) #starts the threading 
         thread.start()
