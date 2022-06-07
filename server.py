@@ -15,8 +15,10 @@ def broadcast(user_message, sender):
     
     for client in client_list:
         if client != sender:
-            client.sendall(user_message.encode(FORMAT))
-        
+            try:
+                client.sendall(user_message.encode(FORMAT))
+            except:
+                print()
 #___________________________________________________________________________________________________________________________
 #This function will receive and handle the messages that every client sends.
 #It will broadcast the messages to every client
@@ -45,9 +47,9 @@ def client_handling(client_sock):
             broadcast(message, client_sock)
             #print('4')
         except: #If there is an error, then we should close and remove the socket
-            # print('9')
-            # client_list.remove(client_list.index(client_sock))
-            # client_sock.close()
+            print('discon')
+            client_list.remove(client_sock)
+            client_sock.close()
             return
             
 #___________________________________________________________________________________________________________________________
@@ -80,14 +82,14 @@ while True: #This loop will continuously run as long as the client is connected
         client_socket, address = server.accept() #accepts all connections and returns the client socket and address
         print(f"Connected with {str(address)}")
         client_list.append(client_socket)
-        print(client_list)
+        # print(client_list)
         
         thread = threading.Thread(target=client_handling, args=(client_socket,)) #starts the threading 
+        thread.daemon = True
         thread.start()
 
 
-        if (str(client_socket.recv(4096).decode(FORMAT)) == 'disconnect'):
-            break
+        
             
 client_socket.close()
 server.close()

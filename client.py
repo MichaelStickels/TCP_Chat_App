@@ -1,9 +1,6 @@
 import sys
 import os
-import random
-import string
 import threading
-import time
 from socket import *
 
 FORMAT = 'utf-8'
