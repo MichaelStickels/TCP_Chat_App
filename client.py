@@ -19,14 +19,14 @@ def connection_init():
 
     #create socket and connect to ip and port
     s = socket(AF_INET, SOCK_STREAM)
-    #s.connect((HOST, PORT))
+    s.connect(HOST, PORT)
 
     print("Connected to chatroom")
     
     username = str(input("Enter username: "))
 
     # send username to server
-    #s.sendall(str.encode(username))
+    s.sendall(str.encode(username))
 
     print("Type 'disconnect' to exit chatroom")
     
@@ -65,6 +65,7 @@ def input_handling():
             os._exit(1)
         else:
             #send message
+            sock.sendall(str.encode(username,'|',inp, sep=''))
             print("message sent")
 
 
@@ -72,6 +73,7 @@ def input_handling():
 # Run
 
 # Initialize connection and take user input
+global sock
 username, sock = connection_init()
 
 # Start a thread for incoming messages
