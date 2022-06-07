@@ -66,14 +66,14 @@ while True: #This loop will continuously run as long as the client is connected
         client_list.append(client_socket)
         
         
-        broadcast(f"{str(client)} has joined the chat!") #Broadcasts a message telling everyone 
+        broadcast(f"{str(client_socket)} has joined the chat!") #Broadcasts a message telling everyone 
                                                          #who just connected to the server
         
         thread = threading.Thread(target=client_handle, args=(client_socket,)) #starts the threading 
         thread.start()
 
 
-        if (client_socket.recv(4096).decode(FORMAT) == 'disconnect'):
+        if (str(client_socket.recv(4096).decode(FORMAT)) == 'disconnect'):
             break
             
 client_socket.close()
