@@ -85,7 +85,7 @@ while True: #This loop will continuously run as long as the client is connected
         thread.start()
 
 
-        if (client_socket.recv(4096).decode(FORMAT) == 'disconnect'):
+        if (str(client_socket.recv(4096).decode(FORMAT)) == 'disconnect'):
             break
             
 client_socket.close()
