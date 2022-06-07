@@ -62,6 +62,7 @@ def input_handling():
         inp = input("Message: ")
         if inp == 'disconnect':
             print("Disconnecting...")
+            sock.sendall(str.encode((str(username)+'|disconnected')))
             os._exit(1)
         else:
             #send message

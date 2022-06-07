@@ -31,7 +31,7 @@ def client_handling(client_sock):
 
     username = client_sock.recv(4096).decode(FORMAT)
 
-    broadcast(f"server|{str(username)} has joined the chat!") #Broadcasts a message telling everyone 
+    broadcast(f"server|{str(username)} has joined the chat!", 'server') #Broadcasts a message telling everyone 
                                                      #who just connected to the server
    
     while True:
@@ -42,12 +42,13 @@ def client_handling(client_sock):
             message = client_sock.recv(4096).decode(FORMAT)
             print(message)
             #print('3')
-            broadcast(message)
+            broadcast(message, client_sock)
             #print('4')
         except: #If there is an error, then we should close and remove the socket
-            print('9')
-            client_list.remove(client_list.index(client_sock))
-            client_sock.close()
+            # print('9')
+            # client_list.remove(client_list.index(client_sock))
+            # client_sock.close()
+            return
             
 #___________________________________________________________________________________________________________________________
 
