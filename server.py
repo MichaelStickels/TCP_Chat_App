@@ -32,10 +32,9 @@ def client_handling(client_socket):
         
         try:
             message = client_socket.recv(4096).decode(FORMAT)
-        
-            broadcast(new_message)
+            broadcast(message)
         except: #If there is an error, then we should close and remove the socket
-            client_list.remove(client_list.index(client))
+            client_list.remove(client_list.index(client_socket))
             client_socket.close()
             
 #___________________________________________________________________________________________________________________________
@@ -52,7 +51,8 @@ def server_init(IP, port):
 if (len(sys.argv) < 2):
     print("Enter IP Address:" + sys.argv[0] + " and relay port:")
     sys.exit(1)
-assert(len(sys.argv) == 2)
+    
+#assert(len(sys.argv) == 2)
 port=int(sys.argv[1])
 IP = str(sys.argv[0])
 
