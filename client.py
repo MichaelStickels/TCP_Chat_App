@@ -19,7 +19,7 @@ def connection_init():
 
     #create socket and connect to ip and port
     s = socket(AF_INET, SOCK_STREAM)
-    s.connect(HOST, PORT)
+    s.connect((HOST, PORT))
 
     print("Connected to chatroom")
     
@@ -65,7 +65,8 @@ def input_handling():
             os._exit(1)
         else:
             #send message
-            sock.sendall(str.encode(username,'|',inp, sep=''))
+            sock.sendall(str.encode((str(username)+'|'+str(inp))))
+            # print(str.encode((str(username)+'|'+str(inp))))
             print("message sent")
 
 

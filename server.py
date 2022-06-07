@@ -11,10 +11,11 @@ FORMAT = 'utf-8'
 #This fucntion will be used to broadcast a client's message to everyone. 
 #It works by taking in the user message and sending the message to one at 
 #a time to every client in the room
-def broadcast(user_message):
+def broadcast(user_message, sender):
     
     for client in client_list:
-        client.send(user_message.encode(FORMAT))
+        if client != sender:
+            client.sendall(user_message.encode(FORMAT))
         
 #___________________________________________________________________________________________________________________________
 #This function will receive and handle the messages that every client sends.
@@ -26,16 +27,27 @@ def broadcast(user_message):
 #The fucntion tales in the client address so that it can send print out the 
 #client's address in the chatroom
 
-def client_handling(client_socket):
+def client_handling(client_sock):
+
+    username = client_sock.recv(4096).decode(FORMAT)
+
+    broadcast(f"server|{str(username)} has joined the chat!") #Broadcasts a message telling everyone 
+                                                     #who just connected to the server
    
     while True:
+        #print('1')
         
         try:
-            message = client_socket.recv(4096).decode(FORMAT)
+            #print('2')
+            message = client_sock.recv(4096).decode(FORMAT)
+            print(message)
+            #print('3')
             broadcast(message)
+            #print('4')
         except: #If there is an error, then we should close and remove the socket
-            client_list.remove(client_list.index(client_socket))
-            client_socket.close()
+            print('9')
+            client_list.remove(client_list.index(client_sock))
+            client_sock.close()
             
 #___________________________________________________________________________________________________________________________
 
@@ -43,9 +55,11 @@ def client_handling(client_socket):
 #and the fucntion will create a socket 
 def server_init(IP, port):
     
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #Creating a socket
-    server.bind((IP, port)) #Binding the socket to the IP and Port number
-    server.listen() #Set server to listening mode to receive data from the client 
+    serv = socket(AF_INET, SOCK_STREAM) #Creating a socket
+    serv.bind((IP, port)) #Binding the socket to the IP and Port number
+    serv.listen() #Set server to listening mode to receive data from the client 
+
+    return serv
 #___________________________________________________________________________________________________________________________
 
 if (len(sys.argv) < 2):
@@ -53,10 +67,11 @@ if (len(sys.argv) < 2):
     sys.exit(1)
     
 #assert(len(sys.argv) == 2)
-port=int(sys.argv[1])
-IP = str(sys.argv[0])
+IP = str(sys.argv[1])
+port=int(sys.argv[2])
 
-server_init(IP,port)
+
+server = server_init(IP,port)
 
 client_list=[];
 
@@ -64,12 +79,9 @@ while True: #This loop will continuously run as long as the client is connected
         client_socket, address = server.accept() #accepts all connections and returns the client socket and address
         print(f"Connected with {str(address)}")
         client_list.append(client_socket)
+        print(client_list)
         
-        
-        broadcast(f"{str(client)} has joined the chat!") #Broadcasts a message telling everyone 
-                                                         #who just connected to the server
-        
-        thread = threading.Thread(target=client_handle, args=(client_socket,)) #starts the threading 
+        thread = threading.Thread(target=client_handling, args=(client_socket,)) #starts the threading 
         thread.start()
 
 
