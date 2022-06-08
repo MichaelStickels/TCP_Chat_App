@@ -1,7 +1,4 @@
 import sys
-import os
-import random
-import string
 import threading
 from socket import *
 
@@ -89,7 +86,9 @@ while True: #This loop will continuously run as long as the client is connected
         thread.start()
 
 
-        
-            
-client_socket.close()
-server.close()
+
+# The compiler will be mad without this
+exit = False
+while True:
+    if exit == True:
+        sys.exit()

@@ -5,8 +5,7 @@ from socket import *
 
 FORMAT = 'utf-8'
 #____________________________________________________________________________________________________________________________________________________________________
-# This fucntion does important and inspiring things 
-# It works by magic squrriels 
+# Initializes the socket and takes user input for server info and username
 # 
 def connection_init():
 
@@ -31,8 +30,7 @@ def connection_init():
 
 
 #____________________________________________________________________________________________________________________________________________________________________
-# This fucntion does important and inspiring things 
-# It works by magic squrriels 
+# Receives messages from the server and prints to the console
 # 
 def message_handling():
     while True:
@@ -50,9 +48,8 @@ def message_handling():
 
 
 #____________________________________________________________________________________________________________________________________________________________________
-# This fucntion does important and inspiring things 
-# It works by magic squrriels 
-# 
+# Takes input from the console and sends to the server
+# Adds disconnect functionality and informs the server
 def input_handling():
     while True:
         
